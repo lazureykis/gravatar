@@ -1,0 +1,3 @@
+
+module Gravatar::Profile
+end
