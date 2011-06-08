@@ -43,13 +43,16 @@ module Gravatar
     Digest::MD5.hexdigest(email)
   end
   
-  # TODO: add more options
   def self.image_url(email, options = {})
-    base_url = options[:secure] ? SECURE_URL : NORMAL_URL
+    url = options[:secure] ? SECURE_URL : NORMAL_URL
     
     if options[:rating]
       options[:rating] = options[:rating].to_s.strip.downcase
-      raise ArgumentError(:rating, "must be #{ratings.join(', ')}.") unless Gravatar::RATINGS.include?(options[:rating])
+      raise ArgumentError("Invalid rating must be #{RATINGS.join(', ')}.") unless RATINGS.include?(options[:rating])
+    end
+    
+    if options[:filetype]
+      options[:filetype] = options[:filetype].to_s.strip.downcase.gsub(/\./, '').gsub(/jpeg/, 'jpg')
     end
     
     query_params = {}
@@ -57,8 +60,13 @@ module Gravatar
     query_params['r'] = options[:rating] if options[:rating]
     query_params['f'] = 'y' if options[:force_default]
     
-    query = query_params.count > 0 ? "?" + query_params.collect{|k,v| "#{k}=#{v}"}.join('&') : ''
-    return "#{base_url}#{email_hash(email)}#{query}"
+    query = query_params.count > 0 ? "?" + query_params.collect{|k,v| "#{k}=#{v}"}.join('&') : nil
+    
+    url += email_hash(email)
+    url += ".#{options[:filetype]}" if options[:filetype]
+    url += query if query
+    
+    url
   end
   
 end
