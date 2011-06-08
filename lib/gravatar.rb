@@ -45,6 +45,9 @@ module Gravatar
   end
   
   def self.image_url(email, options = {})
+    
+    options.each { |name, value| raise ArgumentError("Invalid option") unless AVAILABLE_OPTIONS.include?(name) }
+    
     url = options[:secure] ? SECURE_URL : NORMAL_URL
     
     if options[:rating]
