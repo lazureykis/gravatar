@@ -45,4 +45,8 @@ describe Gravatar do
   it "should raise exception on invalid rating option" do
     lambda { Gravatar.image_url(EMAIL, :rating => 'bad_value') }.should raise_error
   end
+  
+  it "should generate link with default image" do
+    Gravatar.image_url(EMAIL, :default => 'mm').should == "http://gravatar.com/avatar/#{HASH}?d=mm"
+  end
 end

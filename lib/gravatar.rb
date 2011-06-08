@@ -46,13 +46,13 @@ module Gravatar
   
   def self.image_url(email, options = {})
     
-    options.each { |name, value| raise ArgumentError("Invalid option") unless AVAILABLE_OPTIONS.include?(name) }
+    options.each { |name, value| raise ArgumentError("Invalid option") unless AVAILABLE_OPTIONS.include?( name ) }
     
     url = options[:secure] ? SECURE_URL : NORMAL_URL
     
     if options[:rating]
       options[:rating] = options[:rating].to_s.strip.downcase
-      raise ArgumentError("Invalid rating must be #{RATINGS.join(', ')}.") unless RATINGS.include?(options[:rating])
+      raise ArgumentError("Invalid rating must be #{RATINGS.join(', ')}.") unless RATINGS.include?( options[:rating] )
     end
     
     if options[:filetype]
@@ -61,12 +61,16 @@ module Gravatar
     
     if options[:size]
       options[:size] = options[:size].to_i unless options[:size].is_a? Integer
-      
       raise ArgumentError("Invalid image size.") if options[:size] <= 0
     end
     
+    if options[:default]
+      options[:default] = options[:default].to_s.strip.downcase
+      raise ArgumentError("Invalid default image.") unless DEFAULT_IMAGES.include?( options[:default] )
+    end
+    
     query_params = {}
-    query_params['d'] = 'y' if options[:default]
+    query_params['d'] = options[:default] if options[:default]
     query_params['r'] = options[:rating] if options[:rating]
     query_params['s'] = options[:size].to_s if options[:size]
     query_params['f'] = 'y' if options[:force_default]
