@@ -14,6 +14,8 @@ module Gravatar
     :filetype       # .jpg, .png, .gif
   ]
   
+  FILETYPES = %w( jpg png gif )
+  
   DEFAULT_IMAGES = [
     '404',        # do not load any image if none is associated with the email hash, instead return an HTTP 404 (File Not Found) response
     'mm',         # (mystery-man) a simple, cartoon-style silhouetted outline of a person (does not vary by email hash)
@@ -49,30 +51,31 @@ module Gravatar
     options.each { |name, value| raise ArgumentError("Invalid option") unless AVAILABLE_OPTIONS.include?( name ) }
     
     url = options[:secure] ? SECURE_URL : NORMAL_URL
+    query_params = {}
     
     if options[:rating]
       options[:rating] = options[:rating].to_s.strip.downcase
       raise ArgumentError("Invalid rating must be #{RATINGS.join(', ')}.") unless RATINGS.include?( options[:rating] )
+      query_params['r'] = options[:rating]
     end
     
     if options[:filetype]
       options[:filetype] = options[:filetype].to_s.strip.downcase.gsub(/\./, '').gsub(/jpeg/, 'jpg')
+      raise ArgumentError("Invalid file type.") unless FILETYPES.include?( options[:filetype] )
     end
     
     if options[:size]
       options[:size] = options[:size].to_i unless options[:size].is_a? Integer
       raise ArgumentError("Invalid image size.") if options[:size] <= 0
+      query_params['s'] = options[:size].to_s
     end
     
     if options[:default]
       options[:default] = options[:default].to_s.strip.downcase
       raise ArgumentError("Invalid default image.") unless DEFAULT_IMAGES.include?( options[:default] )
+      query_params['d'] = options[:default]
     end
     
-    query_params = {}
-    query_params['d'] = options[:default] if options[:default]
-    query_params['r'] = options[:rating] if options[:rating]
-    query_params['s'] = options[:size].to_s if options[:size]
     query_params['f'] = 'y' if options[:force_default]
     
     query = query_params.count > 0 ? "?" + query_params.collect{|k,v| "#{k}=#{v}"}.join('&') : nil

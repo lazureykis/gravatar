@@ -13,8 +13,8 @@ describe Gravatar do
     Gravatar.image_url(EMAIL, :secure => true).should == "https://secure.gravatar.com/avatar/#{HASH}"
   end
   
-  it "should accept uppercase emails" do
-    Gravatar.image_url(EMAIL.upcase).should == "http://gravatar.com/avatar/#{HASH}"
+  it "should accept bad emails" do
+    Gravatar.image_url("  #{EMAIL.upcase}  ").should == "http://gravatar.com/avatar/#{HASH}"
   end
   
   it "should generate link with rating option passed as symbol or string" do
@@ -44,6 +44,10 @@ describe Gravatar do
   
   it "should raise exception on invalid rating option" do
     lambda { Gravatar.image_url(EMAIL, :rating => 'bad_value') }.should raise_error
+  end
+  
+  it "should raise exception on invalid rating option" do
+    lambda { Gravatar.image_url(EMAIL, :filetype => 'bad_value') }.should raise_error
   end
   
   it "should generate link with default image" do
