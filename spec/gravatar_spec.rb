@@ -32,4 +32,9 @@ describe Gravatar do
     Gravatar.image_url(EMAIL, :filetype => :jpeg).should == "http://gravatar.com/avatar/#{HASH}.jpg"
     Gravatar.image_url(EMAIL, :filetype => "PNG").should == "http://gravatar.com/avatar/#{HASH}.png"
   end
+  
+  it "should generate link with filetype and size" do
+    Gravatar.image_url(EMAIL, :filetype => :jpeg, :size => 10).should == "http://gravatar.com/avatar/#{HASH}.jpg?s=10"
+    Gravatar.image_url(EMAIL, :filetype => "PNG", :size => 90).should == "http://gravatar.com/avatar/#{HASH}.png?s=90"
+  end
 end

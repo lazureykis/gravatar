@@ -8,8 +8,9 @@ module Gravatar
   AVAILABLE_OPTIONS = [
     :default,       # d=[404|mm|identicon|monsterid|wavatar|retro]
     :force_default, # f=y
-    :rating,        # r=[p|pg|r|x]
     :secure,        # using SECURE_URL
+    :rating,        # r=[p|pg|r|x]
+    :size,          # image size s=80
     :filetype       # .jpg, .png, .gif
   ]
   
@@ -55,9 +56,16 @@ module Gravatar
       options[:filetype] = options[:filetype].to_s.strip.downcase.gsub(/\./, '').gsub(/jpeg/, 'jpg')
     end
     
+    if options[:size]
+      options[:size] = options[:size].to_i unless options[:size].is_a? Integer
+      
+      raise ArgumentError("Invalid image size.") if options[:size] <= 0
+    end
+    
     query_params = {}
     query_params['d'] = 'y' if options[:default]
     query_params['r'] = options[:rating] if options[:rating]
+    query_params['s'] = options[:size].to_s if options[:size]
     query_params['f'] = 'y' if options[:force_default]
     
     query = query_params.count > 0 ? "?" + query_params.collect{|k,v| "#{k}=#{v}"}.join('&') : nil
