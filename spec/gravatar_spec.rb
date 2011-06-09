@@ -5,7 +5,21 @@ HASH = '205e460b479e2e5b48aec07710c08d50'
 
 describe Gravatar::Profile do
   it "should get profile" do
-    Gravatar::Profile.get(EMAIL)
+    Gravatar::Profile.get(EMAIL).should_not == nil
+  end
+  
+  context "recieved data" do
+    before :all do
+      @profile = Gravatar::Profile.get(EMAIL)
+    end
+    
+    it "must have a hash" do
+      @profile['hash'].should == HASH
+    end
+    
+    it "must have a name" do
+      @profile['name']['formatted'].should == "Beau Lebens"
+    end
   end
 end
 

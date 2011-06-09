@@ -10,4 +10,5 @@ module Gravatar
   class InvalidEmailFormat < StandardError; end
   class InvalidOptionName < StandardError; end
   class InvalidOptionValue < StandardError; end
+  class InvalidDataReceived < StandardError; end
 end
