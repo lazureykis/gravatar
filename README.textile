@@ -1,0 +1,20 @@
+h1. gravatar
+
+Ruby interface to "gravatar.com":http://gravatar.com/site/implement/
+Support user images and profiles.
+
+h2. Usage
+
+Get user avatar by email:
+= image_tag Gravatar::Image.get_url('user@gmail.com')
+
+Available options: size, filetype, rating, default, secure.
+= image_tag Gravatar::Image.get_url('user@gmail.com', :size => 120, :rating => 'x')
+= image_tag Gravatar::Image.get_url('user@gmail.com', :filetype => :png, :default => 'monsterid')
+
+Get user profile data:
+g_data = Gravatar::Profile.get('user@gmail.com')
+puts 'Login: '  + g_data['preferredUsername']
+puts 'Name: '   + g_data['displayName']
+puts 'About: '  + g_data['aboutMe']
+puts 'Emails:'  + g_data['emails'].map{ |email| email['value'] }.join(', ')
