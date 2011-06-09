@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Pavel Lazureykis"]
   s.email       = ["lazureykis@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Interface to gravatar.com}
+  s.description = %q{Interface to gravatar.com. Supports user images and profiles.}
 
   s.rubyforge_project = "gravatar"
   
