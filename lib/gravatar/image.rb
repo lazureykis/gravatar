@@ -1,5 +1,7 @@
 module Gravatar::Image
   
+  include Gravatar
+  
   def self.get_url(email, options = {})
     raise InvalidEmailFormat.new(email) unless email_cleaned = Email.validate(email)
     email_hash = Email.get_hash(email_cleaned)

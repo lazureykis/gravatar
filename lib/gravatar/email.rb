@@ -1,14 +1,14 @@
 require 'digest/md5'
 
-module Email
+module Gravatar::Email
   
   def self.validate(email)
     if email && email.is_a?( String )
       
       email.strip!
       email.downcase!
-    
-      return email if email =~ /^[a-z][a-z0-9_\.]+@[a-z0-9\-_.]+\.[a-z]{2,4}$/
+      
+      return email if email =~ /^[a-z0-9!#\$%&\`'*+\-\/=\?\^\{\}\|\~_\.]+@[a-z0-9\-_.]+\.[a-z]{2,6}$/
     end
   end
   

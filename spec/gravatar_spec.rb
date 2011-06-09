@@ -9,6 +9,41 @@ describe Gravatar::Profile do
   end
 end
 
+describe Gravatar::Email do
+  
+  it "should get correct hash" do
+    Gravatar::Email.get_hash(EMAIL).should == HASH
+  end
+  
+  it "should parse normal" do
+    Gravatar::Email.validate(EMAIL).should == EMAIL
+  end
+  
+  it "should parse upcase" do
+    Gravatar::Email.validate(EMAIL.upcase).should == EMAIL
+  end
+  
+  it "should parse with whitespace" do
+    Gravatar::Email.validate("  #{EMAIL}  ").should == EMAIL
+  end
+  
+  it "should not parse without correct root domain" do
+    Gravatar::Email.validate('name@domain.m').should be_nil
+    Gravatar::Email.validate('name@domain.verylongrootdomain').should be_nil
+  end
+  
+  it "should parse underscores and dots" do
+    Gravatar::Email.validate('name_@domain.com').should_not == nil
+    Gravatar::Email.validate('my.very-big_name@gmail.com').should_not == nil
+  end
+  
+  %w( ! # $ % & ' * + - / = ? ^ _ ` { | } ~ ).each do |char|
+    it "should parse with character '#{char}' in the middle" do
+      Gravatar::Email.validate("first#{char}last@domain.com").should_not == nil
+    end
+  end
+end
+
 describe Gravatar::Image do
   it "should generate link" do
     Gravatar::Image.get_url(EMAIL).should == "http://gravatar.com/avatar/#{HASH}"
