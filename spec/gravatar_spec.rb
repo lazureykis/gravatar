@@ -1,7 +1,13 @@
 require 'gravatar'
 
-EMAIL = 'name@example.com'
-HASH = 'a130ced3f36ffd4604f4dae04b2b3bcd'
+EMAIL = 'beau@dentedreality.com.au'
+HASH = '205e460b479e2e5b48aec07710c08d50'
+
+describe Gravatar::Profile do
+  it "should get profile" do
+    Gravatar::Profile.get(EMAIL)
+  end
+end
 
 describe Gravatar::Image do
   it "should generate link" do

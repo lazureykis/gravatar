@@ -8,7 +8,7 @@ module Email
       email.strip!
       email.downcase!
     
-      return email if email =~ /^[a-z][a-z0-9_\.]+@[a-z0-9\-_]+\.[a-z]{2,4}$/
+      return email if email =~ /^[a-z][a-z0-9_\.]+@[a-z0-9\-_.]+\.[a-z]{2,4}$/
     end
   end
   
