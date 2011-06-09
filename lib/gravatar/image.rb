@@ -1,6 +1,9 @@
-require 'digest/md5'
-
 module Gravatar::Image
+  
+  class InvalidEmailFormat < StandardError; end
+  class InvalidOptionName < StandardError; end
+  class InvalidOptionValue < StandardError; end
+    
   AVAILABLE_OPTIONS = [
     :default,       # d=[404|mm|identicon|monsterid|wavatar|retro]
     :force_default, # f=y
@@ -31,44 +34,35 @@ module Gravatar::Image
   NORMAL_URL =         "http://gravatar.com/avatar/"
   SECURE_URL = "https://secure.gravatar.com/avatar/"
   
-  def self.email_hash(email)
-
-    raise ArgumentError unless email
-    raise ArgumentError unless email.is_a? String
-    
-    email.strip!
-    email.downcase!
-    
-    Digest::MD5.hexdigest(email)
-  end
-  
   def self.get_url(email, options = {})
+    raise InvalidEmailFormat.new(email) unless email_cleaned = Email.validate(email)
+    email_hash = Email.get_hash(email_cleaned)
     
-    options.each { |name, value| raise ArgumentError("Invalid option") unless AVAILABLE_OPTIONS.include?( name ) }
+    options.each { |name, value| raise InvalidOptionName.new(name) unless AVAILABLE_OPTIONS.include?( name ) }
     
     url = options[:secure] ? SECURE_URL : NORMAL_URL
     query_params = {}
     
     if options[:rating]
       options[:rating] = options[:rating].to_s.strip.downcase
-      raise ArgumentError("Invalid rating must be #{RATINGS.join(', ')}.") unless RATINGS.include?( options[:rating] )
+      raise InvalidOptionValue.new("Invalid rating must be #{RATINGS.join(', ')}.") unless RATINGS.include?( options[:rating] )
       query_params['r'] = options[:rating]
     end
     
     if options[:filetype]
       options[:filetype] = options[:filetype].to_s.strip.downcase.gsub(/\./, '').gsub(/jpeg/, 'jpg')
-      raise ArgumentError("Invalid file type.") unless FILETYPES.include?( options[:filetype] )
+      raise InvalidOptionValue.new("Invalid file type: #{options[:filetype]}") unless FILETYPES.include?( options[:filetype] )
     end
     
     if options[:size]
       options[:size] = options[:size].to_i unless options[:size].is_a? Integer
-      raise ArgumentError("Invalid image size.") if options[:size] <= 0
+      raise InvalidOptionValue.new("Invalid image size: #{options[:size]}") if options[:size] <= 0
       query_params['s'] = options[:size].to_s
     end
     
     if options[:default]
       options[:default] = options[:default].to_s.strip.downcase
-      raise ArgumentError("Invalid default image.") unless DEFAULT_IMAGES.include?( options[:default] )
+      raise InvalidOptionValue.new("Invalid default image: #{options[:default]}") unless DEFAULT_IMAGES.include?( options[:default] )
       query_params['d'] = options[:default]
     end
     
@@ -76,7 +70,7 @@ module Gravatar::Image
     
     query = query_params.count > 0 ? "?" + query_params.collect{|k,v| "#{k}=#{v}"}.join('&') : nil
     
-    url += email_hash(email)
+    url += email_hash
     url += ".#{options[:filetype]}" if options[:filetype]
     url += query if query
     
