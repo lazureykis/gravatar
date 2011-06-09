@@ -6,11 +6,11 @@ Support user images and profiles.
 h2. Usage
 
 Get user avatar by email:
-= image_tag Gravatar::Image.get_url('user@gmail.com')
+= image_tag gravatar_image_url('user@gmail.com')
 
 Available options: size, filetype, rating, default, secure.
-= image_tag Gravatar::Image.get_url('user@gmail.com', :size => 120, :rating => 'x')
-= image_tag Gravatar::Image.get_url('user@gmail.com', :filetype => :png, :default => 'monsterid')
+= image_tag gravatar_image_url('user@gmail.com', :size => 120, :rating => 'x')
+= image_tag gravatar_image_url('user@gmail.com', :filetype => :png, :default => 'monsterid')
 
 Get user profile data:
 g_data = Gravatar::Profile.get('user@gmail.com')

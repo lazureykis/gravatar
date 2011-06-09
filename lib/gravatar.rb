@@ -4,6 +4,9 @@ require 'gravatar/email'
 require 'gravatar/image'
 require 'gravatar/profile'
 
+require 'gravatar/view_helper'
+require 'gravatar/railtie' if defined?(::Rails::Railtie)
+
 # http://gravatar.com/site/implement/
 
 module Gravatar
