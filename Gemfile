@@ -6,8 +6,5 @@ gemspec
 
 group :development, :test do
   gem 'rspec'
-  gem 'autotest'
-  gem 'autotest-fsevent'
-  gem 'autotest-growl'
   gem 'shoulda'
 end
